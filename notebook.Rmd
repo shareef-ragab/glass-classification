@@ -2,44 +2,43 @@
 install.packages('tidyverse')
 install.packages('DataExplorer')
 ```
-
 ```{r Library}
 library(ggplot2)
 library(DataExplorer)
 ```
-
-```{r}
+```{r read date}
 date <- read.csv("glass.csv", header = TRUE)
+
+```
+```{r view date}
 View(date)
 date
 ```
-```{r}
+```{r show num column}
 colnum <- ncol(date)
 print(paste("num of col : ", ncol(date)))
 
 ```
-
-```{r}
+```{r show number row}
 rownum <- nrow(date)
 print(paste("num of row : ", nrow(date)))
 ```
-
-```{r}
+```{r show name column}
 print(colnames(date))
 ```
-```{r}
+```{r show struachre date }
 str(date)
 ```
-```{r}
+```{r show summary date}
 summary(date)
 ```
-```{r}
-ibrary(data.table)
-final_dt <- data.table(date)
-set_missing(final_dt, list(0L, "unknown"))
-plot_missing(final_dt)
+```{r show plot missing date beffor replace value}
+plot_missing(date)
 ```
-
+```{r replace 0 value to null value and show}
+date[date==0]<- NA
+plot_missing(date)
+```
 ```{r}
 table(date$Type)
 ```
