@@ -1,14 +1,14 @@
 ```{r}
-install.packages('tidyverse')
-install.packages('DataExplorer')
+#install.packages('tidyverse')
+#install.packages('DataExplorer')
 ```
 ```{r Library}
+library(corrplot)
 library(ggplot2)
 library(DataExplorer)
 ```
 ```{r read date}
 date <- read.csv("glass.csv", header = TRUE)
-
 ```
 ```{r view date}
 View(date)
@@ -37,9 +37,28 @@ plot_missing(date)
 ```
 ```{r replace 0 value to null value and show}
 date[date==0]<- NA
+plot_missing(date, geom_label_args = list("size" = 4),title = "Missing Data in Glass",theme_config = list(legend.position =c("top")))
+```
+```{r}
+date<-date[,-8:-9]
+date[is.na(date)]<- 0
+date
+```
+```{r}
 plot_missing(date)
 ```
 ```{r}
 table(date$Type)
+```
+```{r}
+date$Type <-as.factor(date$Type)
+str(date)
+```
+```{r}
+boxplot(date[,-8])
+```
+```{r}
+corleation<-cor(date[,-8])
+corrplot(corleation)
 ```
 
