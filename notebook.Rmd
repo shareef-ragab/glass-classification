@@ -1,0 +1,46 @@
+```{r}
+install.packages('tidyverse')
+install.packages('DataExplorer')
+```
+
+```{r Library}
+library(ggplot2)
+library(DataExplorer)
+```
+
+```{r}
+date <- read.csv("glass.csv", header = TRUE)
+View(date)
+date
+```
+```{r}
+colnum <- ncol(date)
+print(paste("num of col : ", ncol(date)))
+
+```
+
+```{r}
+rownum <- nrow(date)
+print(paste("num of row : ", nrow(date)))
+```
+
+```{r}
+print(colnames(date))
+```
+```{r}
+str(date)
+```
+```{r}
+summary(date)
+```
+```{r}
+ibrary(data.table)
+final_dt <- data.table(date)
+set_missing(final_dt, list(0L, "unknown"))
+plot_missing(final_dt)
+```
+
+```{r}
+table(date$Type)
+```
+
