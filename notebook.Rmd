@@ -55,10 +55,38 @@ date$Type <-as.factor(date$Type)
 str(date)
 ```
 ```{r}
-boxplot(date[,-8])
+corrplot(cor(date[,-8]))
 ```
 ```{r}
-corleation<-cor(date[,-8])
-corrplot(corleation)
+boxplot(date$RI~date$Type,main ="Types of glass and the severity of its refraction",xlab = 'Type',ylab = 'RI')
+```
+
+```{r}
+dateElemn<-date[,-8]
+dateElemn<-dateElemn[,-1]
+sum_col<- apply(dateElemn, 2, mean)
+barplot(sum_col,col ='red',main = 'average of items used' )
+```
+
+```{r}
+plot(dateElemn,main ="Relshion element" )
+```
+```{r}
+ggplot(date, aes(x=Na, fill=Type)) + geom_density()
+```
+```{r}
+ggplot(date, aes(x=Mg, fill=Type)) + geom_density()
+```
+```{r}
+ggplot(date, aes(x=Al, fill=Type)) + geom_density()
+```
+```{r}
+ggplot(date, aes(x=Si, fill=Type)) + geom_density()
+```
+```{r}
+ggplot(date, aes(x=K, fill=Type)) + geom_density()
+```
+```{r}
+ggplot(date, aes(x=Ca, fill=Type)) + geom_density()
 ```
 
