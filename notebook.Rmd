@@ -36,6 +36,7 @@ summary(date)
 plot_missing(date)
 ```
 ```{r replace 0 value to null value and show}
+png("missing_value_after process.png")
 date[date==0]<- NA
 plot_missing(date, geom_label_args = list("size" = 4),title = "Missing Data in Glass",theme_config = list(legend.position =c("top")))
 ```
@@ -55,38 +56,45 @@ date$Type <-as.factor(date$Type)
 str(date)
 ```
 ```{r}
+png("corplot_process.png")
 corrplot(cor(date[,-8]))
 ```
 ```{r}
+png("boxplot.png")
 boxplot(date$RI~date$Type,main ="Types of glass and the severity of its refraction",xlab = 'Type',ylab = 'RI')
 ```
-
 ```{r}
+png("barplot.png")
 dateElemn<-date[,-8]
 dateElemn<-dateElemn[,-1]
 sum_col<- apply(dateElemn, 2, mean)
 barplot(sum_col,col ='red',main = 'average of items used' )
 ```
-
 ```{r}
-plot(dateElemn,main ="Relshion element" )
+png("plot.png")
+plot(dateElemn,main ="relation  elements " )
 ```
 ```{r}
+png("na_type.png")
 ggplot(date, aes(x=Na, fill=Type)) + geom_density()
 ```
 ```{r}
+png("mg_type.png")
 ggplot(date, aes(x=Mg, fill=Type)) + geom_density()
 ```
 ```{r}
+png("al_type.png")
 ggplot(date, aes(x=Al, fill=Type)) + geom_density()
 ```
 ```{r}
+png("si_type.png")
 ggplot(date, aes(x=Si, fill=Type)) + geom_density()
 ```
 ```{r}
+png("k_type.png")
 ggplot(date, aes(x=K, fill=Type)) + geom_density()
 ```
 ```{r}
+png("ca_type.png")
 ggplot(date, aes(x=Ca, fill=Type)) + geom_density()
-```
 
