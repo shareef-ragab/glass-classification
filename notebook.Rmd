@@ -71,12 +71,8 @@ sum_col<- apply(dateElemn, 2, mean)
 barplot(sum_col,col ='red',main = 'average of items used' )
 ```
 ```{r}
-<<<<<<< HEAD
 png("plot.png")
 plot(dateElemn,main ="relation  elements " )
-=======
-plot(dateElemn,main ="Relshion element" )
->>>>>>> ece44b2a10efe33bd239f2b9510b314e5b6b2efd
 ```
 ```{r}
 png("na_type.png")
@@ -101,4 +97,4 @@ ggplot(date, aes(x=K, fill=Type)) + geom_density()
 ```{r}
 png("ca_type.png")
 ggplot(date, aes(x=Ca, fill=Type)) + geom_density()
-
+```
