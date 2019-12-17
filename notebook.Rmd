@@ -98,3 +98,6 @@ ggplot(date, aes(x=K, fill=Type)) + geom_density()
 png("ca_type.png")
 ggplot(date, aes(x=Ca, fill=Type)) + geom_density()
 ```
+```{r}
+
+```
