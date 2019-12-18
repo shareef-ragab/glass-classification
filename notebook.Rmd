@@ -6,6 +6,8 @@
 library(corrplot)
 library(ggplot2)
 library(DataExplorer)
+library(e1071)
+library(caret)
 ```
 ```{r read date}
 date <- read.csv("glass.csv", header = TRUE)
@@ -79,7 +81,7 @@ png("na_type.png")
 ggplot(date, aes(x=Na, fill=Type)) + geom_density()
 ```
 ```{r}
-png("mg_type.png")
+png("mg_type.png")d
 ggplot(date, aes(x=Mg, fill=Type)) + geom_density()
 ```
 ```{r}
@@ -98,6 +100,37 @@ ggplot(date, aes(x=K, fill=Type)) + geom_density()
 png("ca_type.png")
 ggplot(date, aes(x=Ca, fill=Type)) + geom_density()
 ```
+
+```{r}
+clusters <- kmeans(date[,1], 7)
+clusters 
+```
+```{r}
+date$RIcluster <- as.factor(clusters$cluster)
+date
+```
 ```{r}
 
+index <- sample(rownum, 0.7 * rownum)
+trainDate <- date[index,]
+testDate <- date[-index,]
+dim(date)
+dim(trainDate)
+dim(testDate)
+
 ```
+
+```{r}
+table(date$RIcluster)
+table(trainDate$RIcluster)
+table(testDate$RIcluster)
+```
+
+```{r}
+
+learn_svm <- svm(RIcluster~., data=trainDate)
+pre_svm <- predict(learn_svm, trainDate[,-9])
+cm_svm <- confusionMatrix(pre_svm, date$RIcluster)
+cm_svm
+```
+
