@@ -9,7 +9,6 @@ library(DataExplorer)
 library(e1071)
 library(caret)
 ```
-
 ```{r read date}
 date <- read.csv("glass.csv", header = TRUE)
 ```
@@ -22,7 +21,6 @@ date
 ```{r show num column}
 colnum <- ncol(date)
 print(paste("num of col : ", ncol(date)))
-
 ```
 
 ```{r show number row}
@@ -97,32 +95,32 @@ plot(dateElemn,main ="relation  elements " )
 
 ```{r}
 png("na_type.png")
-ggplot(date, aes(x=Na, fill=Type)) + geom_density()
+ggplot(date, aes(x=Na, fill=Type,colour =Type)) + geom_density(alpha = 0.1)
 ```
 
 ```{r}
 png("mg_type.png")
-ggplot(date, aes(x=Mg, fill=Type)) + geom_density()
+ggplot(date, aes(x=Mg, fill=Type,colour =Type)) + geom_density(alpha = 0.1)
 ```
 
 ```{r}
 png("al_type.png")
-ggplot(date, aes(x=Al, fill=Type)) + geom_density()
+ggplot(date, aes(x=Al, fill=Type,colour =Type)) + geom_density(alpha = 0.1)
 ```
 
 ```{r}
 png("si_type.png")
-ggplot(date, aes(x=Si, fill=Type)) + geom_density()
+ggplot(date, aes(x=Si, fill=Type,colour =Type)) + geom_density(alpha = 0.1)
 ```
 
 ```{r}
 png("k_type.png")
-ggplot(date, aes(x=K, fill=Type)) + geom_density()
+ggplot(date, aes(x=K, fill=Type,colour =Type)) + geom_density(alpha = 0.1)
 ```
 
 ```{r}
 png("ca_type.png")
-ggplot(date, aes(x=Ca, fill=Type)) + geom_density()
+ggplot(date, aes(x=Ca, fill=Type,colour =Type)) + geom_density(alpha = 0.1)
 ```
 
 ```{r}
@@ -136,31 +134,31 @@ date
 
 ```{r}
 png("Na_RIcluster.png");
-ggplot(date, aes(x=Na, fill=RIcluster)) + geom_density()
+ggplot(date, aes(x=Na, fill=RIcluster,colour =RIcluster)) + geom_density(alpha = 0.1)
 ```
 ```{r}
 png("Mg_RIcluster.png");
-ggplot(date, aes(x=Mg, fill=RIcluster)) + geom_density()
+ggplot(date, aes(x=Mg, fill=RIcluster,colour =RIcluster)) + geom_density(alpha = 0.1)
 ```
 
 ```{r}
 png("AL_RIcluster.png");
-ggplot(date, aes(x=Al, fill=RIcluster)) + geom_density()
+ggplot(date, aes(x=Al, fill=RIcluster,colour =RIcluster)) + geom_density(alpha = 0.1)
 ```
 
 ```{r}
 png("Si_RIcluster.png");
-ggplot(date, aes(x=Si, fill=RIcluster)) + geom_density()
+ggplot(date, aes(x=Si, fill=RIcluster,colour =RIcluster)) +geom_density(alpha = 0.1)
 ```
 
 ```{r}
 png("K_RIcluster.png");
-ggplot(date, aes(x=K, fill=RIcluster)) + geom_density()
+ggplot(date, aes(x=K, fill=RIcluster,colour =RIcluster)) + geom_density(alpha = 0.1)
 ```
 
 ```{r}
 png("Ca_RIcluster.png");
-ggplot(date, aes(x=Ca, fill=RIcluster)) + geom_density()
+ggplot(date, aes(x=Ca, fill=RIcluster,colour =RIcluster)) + geom_density(alpha = 0.1)
 ```
 
 ```{r}
@@ -186,7 +184,6 @@ table(testDate$RIcluster)
 
 ```{r}
 traincontrol <- trainControl(method = "cv", number = 10)
-traincontrol
 ```
 
 ```{r}
