@@ -81,7 +81,7 @@ png("na_type.png")
 ggplot(date, aes(x=Na, fill=Type)) + geom_density()
 ```
 ```{r}
-png("mg_type.png")d
+png("mg_type.png")
 ggplot(date, aes(x=Mg, fill=Type)) + geom_density()
 ```
 ```{r}
@@ -111,7 +111,7 @@ date
 ```
 ```{r}
 
-index <- sample(rownum, 0.7 * rownum)
+index <- createDataPartition(y = date$RIcluster, p = 0.7, list = F)
 trainDate <- date[index,]
 testDate <- date[-index,]
 dim(date)
@@ -127,10 +127,38 @@ table(testDate$RIcluster)
 ```
 
 ```{r}
+mlrcontrol <- trainControl(method = "cv", number = 10)
+mlrcontrol
 
-learn_svm <- svm(RIcluster~., data=trainDate)
-pre_svm <- predict(learn_svm, trainDate[,-9])
-cm_svm <- confusionMatrix(pre_svm, date$RIcluster)
-cm_svm
 ```
+```{r}
+trainRI <- train(RIcluster~., trainDate, method = "glmnet", 
+             metric = "Accuracy", 
+             tuneGrid = expand.grid(alpha = 0.1, lambda = 0.004972569),
+             trControl = mlrcontrol)
+
+PredictRIClusetr <- predict(trainRI, testDate)
+confusionMatrix(testDate$RIcluster, PredictRIClusetr)
+```
+```{r}
+trainRI <- train(RIcluster~., trainDate, 
+             method = "svmRadial", 
+                       preProcess = c("center","scale"),
+                       metric = "Accuracy",
+                       tuneGrid = expand.grid(.sigma = 0.5, .C = 10))
+
+PredictRIClusetr <- predict(trainRI, testDate)
+confusionMatrix(testDate$RIcluster, PredictRIClusetr)
+```
+```{r}
+trainRI <- train(RIcluster~., trainDate, 
+             method = 'rf',
+            metric = "Accuracy",
+            ntree = 500,
+            tuneGrid = expand.grid(.mtry = 1:8))
+
+PredictRIClusetr <- predict(trainRI, testDate)
+confusionMatrix(testDate$RIcluster, PredictRIClusetr)
+```
+
 
