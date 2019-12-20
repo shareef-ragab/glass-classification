@@ -9,62 +9,79 @@ library(DataExplorer)
 library(e1071)
 library(caret)
 ```
+
 ```{r read date}
 date <- read.csv("glass.csv", header = TRUE)
 ```
+
 ```{r view date}
 View(date)
 date
 ```
+
 ```{r show num column}
 colnum <- ncol(date)
 print(paste("num of col : ", ncol(date)))
 
 ```
+
 ```{r show number row}
 rownum <- nrow(date)
 print(paste("num of row : ", nrow(date)))
 ```
+
 ```{r show name column}
 print(colnames(date))
 ```
+
 ```{r show struachre date }
 str(date)
 ```
+
 ```{r show summary date}
 summary(date)
 ```
+
 ```{r show plot missing date beffor replace value}
+png("beffor_del.png");
 plot_missing(date)
 ```
+
 ```{r replace 0 value to null value and show}
 png("missing_value_after process.png")
 date[date==0]<- NA
 plot_missing(date, geom_label_args = list("size" = 4),title = "Missing Data in Glass",theme_config = list(legend.position =c("top")))
 ```
+
 ```{r}
 date<-date[,-8:-9]
 date[is.na(date)]<- 0
 date
 ```
+
 ```{r}
+png("after_del.png");
 plot_missing(date)
 ```
 ```{r}
 table(date$Type)
 ```
+
 ```{r}
 date$Type <-as.factor(date$Type)
 str(date)
 ```
+
 ```{r}
 png("corplot_process.png")
 corrplot(cor(date[,-8]))
 ```
+
 ```{r}
-png("boxplot.png")
+png("boxplot_Type_with_RI.png")
 boxplot(date$RI~date$Type,main ="Types of glass and the severity of its refraction",xlab = 'Type',ylab = 'RI')
 ```
+
 ```{r}
 png("barplot.png")
 dateElemn<-date[,-8]
@@ -72,30 +89,37 @@ dateElemn<-dateElemn[,-1]
 sum_col<- apply(dateElemn, 2, mean)
 barplot(sum_col,col ='red',main = 'average of items used' )
 ```
+
 ```{r}
 png("plot.png")
 plot(dateElemn,main ="relation  elements " )
 ```
+
 ```{r}
 png("na_type.png")
 ggplot(date, aes(x=Na, fill=Type)) + geom_density()
 ```
+
 ```{r}
 png("mg_type.png")
 ggplot(date, aes(x=Mg, fill=Type)) + geom_density()
 ```
+
 ```{r}
 png("al_type.png")
 ggplot(date, aes(x=Al, fill=Type)) + geom_density()
 ```
+
 ```{r}
 png("si_type.png")
 ggplot(date, aes(x=Si, fill=Type)) + geom_density()
 ```
+
 ```{r}
 png("k_type.png")
 ggplot(date, aes(x=K, fill=Type)) + geom_density()
 ```
+
 ```{r}
 png("ca_type.png")
 ggplot(date, aes(x=Ca, fill=Type)) + geom_density()
@@ -109,8 +133,42 @@ clusters
 date$RIcluster <- as.factor(clusters$cluster)
 date
 ```
-```{r}
 
+```{r}
+png("Na_RIcluster.png");
+ggplot(date, aes(x=Na, fill=RIcluster)) + geom_density()
+```
+```{r}
+png("Mg_RIcluster.png");
+ggplot(date, aes(x=Mg, fill=RIcluster)) + geom_density()
+```
+
+```{r}
+png("AL_RIcluster.png");
+ggplot(date, aes(x=Al, fill=RIcluster)) + geom_density()
+```
+
+```{r}
+png("Si_RIcluster.png");
+ggplot(date, aes(x=Si, fill=RIcluster)) + geom_density()
+```
+
+```{r}
+png("K_RIcluster.png");
+ggplot(date, aes(x=K, fill=RIcluster)) + geom_density()
+```
+
+```{r}
+png("Ca_RIcluster.png");
+ggplot(date, aes(x=Ca, fill=RIcluster)) + geom_density()
+```
+
+```{r}
+png("boxplot_Type_with_RIcluster.png")
+boxplot(as.numeric(date$RIcluster)~date$Type,main ="Types of glass and the severity of its refraction",xlab = 'Type',ylab = 'RIcluster')
+```
+
+```{r}
 index <- createDataPartition(y = date$RIcluster, p = 0.7, list = F)
 trainDate <- date[index,]
 testDate <- date[-index,]
@@ -127,38 +185,50 @@ table(testDate$RIcluster)
 ```
 
 ```{r}
-mlrcontrol <- trainControl(method = "cv", number = 10)
-mlrcontrol
+traincontrol <- trainControl(method = "cv", number = 10)
+traincontrol
+```
 
+```{r}
+trainRIGlmnet <- train(RIcluster~., trainDate, method = "glmnet", metric = "Accuracy",
+                       tuneGrid = expand.grid(alpha = 0.1, lambda = 0.004972569),trControl = traincontrol)
+PredictRIClusetrGlmnet <- predict(trainRIGlmnet, testDate)
+confusionMatrix(testDate$RIcluster, PredictRIClusetrGlmnet)
+```
+
+```{r}
+trainRISvmRadial <- train(RIcluster~., trainDate, method = "svmRadial", preProcess = c("center","scale")
+                          ,metric = "Accuracy",tuneGrid = expand.grid(.sigma = 0.5, .C = 10)
+                          ,trControl = traincontrol)
+PredictRIClusetrSvmRadial <- predict(trainRISvmRadial, testDate)
+confusionMatrix(testDate$RIcluster, PredictRIClusetrSvmRadial)
+```
+
+```{r}
+trainRIRf <- train(RIcluster~., trainDate, method = 'rf',metric = "Accuracy",ntree = 500
+                   ,tuneGrid = expand.grid(.mtry = 2:8),trControl = traincontrol)
+PredictRIClusetrRf <- predict(trainRIRf, testDate)
+confusionMatrix(testDate$RIcluster, PredictRIClusetrRf)
+```
+
+```{r}
+trainRINnet <- train(RIcluster~., trainDate, method = 'nnet',metric = "Accuracy"
+                     ,preProcess = c("center","scale"),tuneGrid = expand.grid(size = 10, decay = 0.1)
+                     ,verbose = F, trControl = traincontrol)
+PredictRIClusetrNnet <- predict(trainRINnet, testDate)
+confusionMatrix(testDate$RIcluster, PredictRIClusetrNnet)
 ```
 ```{r}
-trainRI <- train(RIcluster~., trainDate, method = "glmnet", 
-             metric = "Accuracy", 
-             tuneGrid = expand.grid(alpha = 0.1, lambda = 0.004972569),
-             trControl = mlrcontrol)
-
-PredictRIClusetr <- predict(trainRI, testDate)
-confusionMatrix(testDate$RIcluster, PredictRIClusetr)
+modelResamples <- resamples(list(MLR = trainRIGlmnet, SVM = trainRISvmRadial, RF = trainRIRf,NNet = trainRINnet))
 ```
+
 ```{r}
-trainRI <- train(RIcluster~., trainDate, 
-             method = "svmRadial", 
-                       preProcess = c("center","scale"),
-                       metric = "Accuracy",
-                       tuneGrid = expand.grid(.sigma = 0.5, .C = 10))
-
-PredictRIClusetr <- predict(trainRI, testDate)
-confusionMatrix(testDate$RIcluster, PredictRIClusetr)
+png("bwplot_Kappa_Accuracy.png")
+bwplot(modelResamples, metric = c("Kappa", "Accuracy"))
 ```
+
 ```{r}
-trainRI <- train(RIcluster~., trainDate, 
-             method = 'rf',
-            metric = "Accuracy",
-            ntree = 500,
-            tuneGrid = expand.grid(.mtry = 1:8))
-
-PredictRIClusetr <- predict(trainRI, testDate)
-confusionMatrix(testDate$RIcluster, PredictRIClusetr)
+png("densityplot_Kappa_Accuracy.png")
+densityplot(modelResamples, metric = c("Kappa", "Accuracy"), auto.key = list(coloumns = 3))
 ```
-
 
