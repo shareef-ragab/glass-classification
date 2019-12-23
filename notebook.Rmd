@@ -71,7 +71,7 @@ str(date)
 ```
 
 ```{r}
-png("corplot_process.png")
+#png("corplot_process.png")
 corrplot(cor(date[,-8]))
 ```
 
@@ -124,11 +124,13 @@ ggplot(date, aes(x=Ca, fill=Type,colour =Type)) + geom_density(alpha = 0.1)
 ```
 
 ```{r}
-clusters <- kmeans(date[,1], 7)
+clusters <- kmeans(date$RI, 9)
 clusters 
 ```
 ```{r}
-date$RIcluster <- as.factor(clusters$cluster)
+date$RIcluster <- clusters$cluster
+corrplot(cor(date[,-8]))
+date$RIcluster <- as.factor(date$RIcluster)
 date
 ```
 
