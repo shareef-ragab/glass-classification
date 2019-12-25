@@ -41,12 +41,12 @@ summary(date)
 ```
 
 ```{r show plot missing date beffor replace value}
-png("beffor_del.png");
+#png("beffor_del.png");
 plot_missing(date)
 ```
 
 ```{r replace 0 value to null value and show}
-png("missing_value_after process.png")
+#png("missing_value_after process.png")
 date[date==0]<- NA
 plot_missing(date, geom_label_args = list("size" = 4),title = "Missing Data in Glass",theme_config = list(legend.position =c("top")))
 ```
@@ -58,7 +58,7 @@ date
 ```
 
 ```{r}
-png("after_del.png");
+#png("after_del.png");
 plot_missing(date)
 ```
 ```{r}
@@ -76,12 +76,12 @@ corrplot(cor(date[,-8]))
 ```
 
 ```{r}
-png("boxplot_Type_with_RI.png")
+#png("boxplot_Type_with_RI.png")
 boxplot(date$RI~date$Type,main ="Types of glass and the severity of its refraction",xlab = 'Type',ylab = 'RI')
 ```
 
 ```{r}
-png("barplot.png")
+#png("barplot.png")
 dateElemn<-date[,-8]
 dateElemn<-dateElemn[,-1]
 sum_col<- apply(dateElemn, 2, mean)
@@ -89,22 +89,22 @@ barplot(sum_col,col ='red',main = 'average of items used' )
 ```
 
 ```{r}
-png("plot.png")
+#png("plot.png")
 plot(dateElemn,main ="relation  elements " )
 ```
 
 ```{r}
-png("na_type.png")
+#png("na_type.png")
 ggplot(date, aes(x=Na, fill=Type,colour =Type)) + geom_density(alpha = 0.1)
 ```
 
 ```{r}
-png("mg_type.png")
+#png("mg_type.png")
 ggplot(date, aes(x=Mg, fill=Type,colour =Type)) + geom_density(alpha = 0.1)
 ```
 
 ```{r}
-png("al_type.png")
+#png("al_type.png")
 ggplot(date, aes(x=Al, fill=Type,colour =Type)) + geom_density(alpha = 0.1)
 ```
 
@@ -124,7 +124,7 @@ ggplot(date, aes(x=Ca, fill=Type,colour =Type)) + geom_density(alpha = 0.1)
 ```
 
 ```{r}
-clusters <- kmeans(date$RI, 9)
+clusters <- kmeans(date$RI, 7)
 clusters 
 ```
 ```{r}
@@ -135,7 +135,7 @@ date
 ```
 
 ```{r}
-png("Na_RIcluster.png");
+#png("Na_RIcluster.png");
 ggplot(date, aes(x=Na, fill=RIcluster,colour =RIcluster)) + geom_density(alpha = 0.1)
 ```
 ```{r}
@@ -192,7 +192,7 @@ traincontrol <- trainControl(method = "cv", number = 10)
 trainRIGlmnet <- train(RIcluster~., trainDate, method = "glmnet", metric = "Accuracy",
                        tuneGrid = expand.grid(alpha = 0.1, lambda = 0.004972569),trControl = traincontrol)
 PredictRIClusetrGlmnet <- predict(trainRIGlmnet, testDate)
-confusionMatrix(testDate$RIcluster, PredictRIClusetrGlmnet)
+confusionMatrix(testDate$RIcluster, PredictRIClusetrGlmnet, mode = "everything")
 ```
 
 ```{r}
@@ -200,14 +200,14 @@ trainRISvmRadial <- train(RIcluster~., trainDate, method = "svmRadial", preProce
                           ,metric = "Accuracy",tuneGrid = expand.grid(.sigma = 0.5, .C = 10)
                           ,trControl = traincontrol)
 PredictRIClusetrSvmRadial <- predict(trainRISvmRadial, testDate)
-confusionMatrix(testDate$RIcluster, PredictRIClusetrSvmRadial)
+confusionMatrix(testDate$RIcluster, PredictRIClusetrSvmRadial, mode = "everything")
 ```
 
 ```{r}
 trainRIRf <- train(RIcluster~., trainDate, method = 'rf',metric = "Accuracy",ntree = 500
                    ,tuneGrid = expand.grid(.mtry = 2:8),trControl = traincontrol)
 PredictRIClusetrRf <- predict(trainRIRf, testDate)
-confusionMatrix(testDate$RIcluster, PredictRIClusetrRf)
+confusionMatrix(testDate$RIcluster, PredictRIClusetrRf, mode = "everything")
 ```
 
 ```{r}
@@ -215,19 +215,19 @@ trainRINnet <- train(RIcluster~., trainDate, method = 'nnet',metric = "Accuracy"
                      ,preProcess = c("center","scale"),tuneGrid = expand.grid(size = 10, decay = 0.1)
                      ,verbose = F, trControl = traincontrol)
 PredictRIClusetrNnet <- predict(trainRINnet, testDate)
-confusionMatrix(testDate$RIcluster, PredictRIClusetrNnet)
+confusionMatrix(testDate$RIcluster, PredictRIClusetrNnet, mode = "everything")
 ```
 ```{r}
 modelResamples <- resamples(list(MLR = trainRIGlmnet, SVM = trainRISvmRadial, RF = trainRIRf,NNet = trainRINnet))
 ```
 
 ```{r}
-png("bwplot_Kappa_Accuracy.png")
+#png("bwplot_Kappa_Accuracy.png")
 bwplot(modelResamples, metric = c("Kappa", "Accuracy"))
 ```
 
 ```{r}
-png("densityplot_Kappa_Accuracy.png")
+#png("densityplot_Kappa_Accuracy.png")
 densityplot(modelResamples, metric = c("Kappa", "Accuracy"), auto.key = list(coloumns = 3))
 ```
 
